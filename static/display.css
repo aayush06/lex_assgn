@@ -1,0 +1,9 @@
+.table {
+    border-bottom:0px ;
+}
+.table th, .table td {
+    border: 1px ;
+}
+.fixed-table-container {
+    border:0px ;
+}
