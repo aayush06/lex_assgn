@@ -59,64 +59,65 @@ def login():
 				if len(data) is 1:
 					flash("You are successfully logged in")
 					session['username']=user_name
-					return redirect(url_for('search'))
+					cursor.execute("""select * from video""")
+					v_data=cursor.fetchall()
+					print (v_data)
+					return render_template('search.html',v_data=v_data)
 				else:
 					return redirect(url_for('unauth_user'))
 	except Exception as e:
 		return json.dumps({'error':str(e)})
-		
-@app.route('/search')
-def search():
-	return render_template('search.html')
 	
 @app.route('/display', methods=['POST'])
 def display():
 	try:
-		video_name=request.form['search_query']
+		video_name=request.form['search']
 		if video_name:
 			print(video_name)
 			connection=mysql.get_db()
-			cursor = connection.cursor()
-			cursor.execute("""select video_name from video where video_name like %s""",(video_name))
-			data=cursor.fetchall()
-			print (data)
-			return render_template('display.html', data=data)
+			cursor=connection.cursor()
+			cursor.execute("""select * from video""")
+			v_data=cursor.fetchall()
+			print (v_data)
+			return render_template('search.html',v_data=v_data)
+		else:
+			return render_tempate('search.html')
 	except Exception as e:
-		return json.dumps({'error':str(e)})
+		return json.dumps({'error':str(e)})	
 		
 @app.route('/video', methods=['POST'])
 def video():
 	try:
-		video_name='adele hello'
+		video_name=request.form['video_name']
 		if video_name:
 			print(video_name)
 			connection=mysql.get_db()
 			cursor = connection.cursor()
-			cursor.execute("""select video_url from video where video_name like %s""",(video_name))
-			cursor.execute("""select video_id from video where video_name like %s""",(video_name))
+			cursor.execute("""select video_id from video where video_name like %s %""",(video_name))
 			data=cursor.fetchall()
-			cursor.execute("""select likes from like_dislike where video_id %s""",(data))
-			data1=cursor.fetchall()
-			cursor.execute("""select dislikes from like_dislike where video_id %s""",(data))
-			data2=cursor.fetchall()
-			cursor.execute("""select comments from comments where video_id %s""",(data))
-			data3=cursor.fetchall()
-			return render_template('video.html', data=video_name,data1=data1, data2=data2,data3=data3)
+			cursor.execute("""select likes from like_dislike where video_id %s %""",(data))
+			data_l=cursor.fetchall()
+			cursor.execute("""select dislikes from like_dislike where video_id %s %""",(data))
+			data_d=cursor.fetchall()
+			cursor.execute("""select comments from comments where video_id %s %""",(data))
+			data_c=cursor.fetchall()
+			return render_template('video.html', data=video_name,data_l=data_l, data_d=data_d,data_c=data_c)
 	except Exception as e:
 		return json.dumps({'error':str(e)})
 		
 @app.route('/like', methods=['POST'])
 def like():
 	try:
-		video_name='adele hello'
+		video_name=request.form['video_name']
 		if video_name:
 			print(video_name)
 			connection=mysql.get_db()
 			cursor = connection.cursor()
-			cursor.execute("""select video_id from video where video_name like %s""",(video_name))
+			cursor.execute("""select video_id from video where video_name like %s %""",(video_name))
 			data=cursor.fetchall()
-			cursor.execute("""update like_dislike set likes=likes+1 where video_id=%s""",(data))
-			cursor.execute("""select likes from like_dislike where video_id=%s""",(data))
+			cursor.execute("""update like_dislike set likes=likes+1 where video_id=%s %""",(data))
+			cursor.commit()
+			cursor.execute("""select likes from like_dislike where video_id=%s %""",(data))
 			data1=cursor.fetchall()
 			return render_template('video.html',data1=data1)
 	except Exception as e:
@@ -125,37 +126,40 @@ def like():
 @app.route('/disike', methods=['POST'])
 def dislike():
 	try:
-		video_name='adele hello'
+		video_name=request.form['video_name']
 		if video_name:
 			print(video_name)
 			connection=mysql.get_db()
 			cursor = connection.cursor()
-			cursor.execute("""select video_id from video where video_name like %s""",(video_name))
+			cursor.execute("""select video_id from video where video_name like %s %""",(video_name))
 			data=cursor.fetchall()
-			cursor.execute("""update like_dislike set dislikes=dislikes+1 where video_id=%s""",(data))
-			cursor.execute("""select dislikes from like_dislike where video_id=%s""",(data))
+			cursor.execute("""update like_dislike set dislikes=dislikes+1 where video_id=%s %""",(data))
+			cursor.commit()
+			cursor.execute("""select dislikes from like_dislike where video_id=%s %""",(data))
 			data2=cursor.fetchall()
 			return render_template('video.html',data2=data2)
 	except Exception as e:
 		return json.dumps({'error':str(e)})
 		
-# @app.route('/store_comment' methods=['POST'])
-# def store_comment():
-	# try:
-		# video_name='adele hello'
-		# comment=request.form('comment')
-		# if comment:
-			# print(comment)
-			# connection=mysql.get_db()
-			# cursor = connection.cursor()
-			# cursor.execute("""insert into comments values)
-			# data=cursor.fetchall()
-			# cursor.execute("""update like_dislike set dislikes=dislikes+1 where video_id=%s""",(data))
-			# cursor.execute("""select dislikes from like_dislike where video_id=%s""",(data))
-			# data2=cursor.fetchall()
-			# return render_template('video.html',data2=data2)
-	# except Exception as e:
-		# return json.dumps({'error':str(e)})
+@app.route('/store_comment', methods=['POST'])
+def store_comment():
+	try:
+		video_name=request.form['video_name']
+		comment=request.form('comment')
+		if comment:
+			print(comment)
+			connection=mysql.get_db()
+			cursor = connection.cursor()
+			cursor.execute("""select video_id from video where video_name like %s %""",(video_name))
+			data=cursor.fetchall()
+			user_name=session['username']
+			cursor.execute("""select user_id from user where user_name like %s %""",(user_name))
+			data1=cursor.fetchall()
+			cursor.execute("""insert into comments values(%s,%s,%s,now()),"""(data1,data,comment))
+			cursor.commit()
+			return render_template('video.html',data2=data2)
+	except Exception as e:
+		return json.dumps({'error':str(e)})
 	
 app.route('/logout')
 def logout():

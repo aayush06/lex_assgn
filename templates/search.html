@@ -1,42 +1,34 @@
 <html>
 <haad><title>Search Page</title>
 	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-		<!-- Latest compiled JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet"/>
-	<link href="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.css" rel="stylesheet"/>
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-	<script src="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.js"></script>
+		<link href="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.css" rel="stylesheet"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script src="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.js"></script>
 		<link rel="stylesheet" href="../static/search.css"></link>
 </haad>
 <body>
-<form action="/display" method="POST">
-<div style="padding-top:30px" class="panel-body" >
-
 <center>
-<div id="masthead-search-terms" class="masthead-search-terms-border " dir="ltr">
-
-                                    <!-- Button -->
-
-                                    
-                                       <input id="ssearch_query" autocomplete="off" autofocus="" onkeydown="if (!this.value &amp;&amp; (event.keyCode == 40 || event.keyCode == 32 || event.keyCode == 34)) {this.onkeydown = null; this.blur();}" class="search-term masthead-search-renderer-input yt-uix-form-input-bidi" name="search_query" value="" type="text" tabindex="1" placeholder="Search" title="Search" aria-label="Search" dir="ltr" spellcheck="false" style="outline: none;">
-<div style="margin-top:10px" class="form-group"> <button id="btn-search" type="Submit" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Search</button>
-                                        <span style="margin-left:8px;"></span>  
-                                    
-                                </div>
-
-</div>
-
-</center>
-</div>
+<form action="/display" method="POST">
+<input type="text" name="search" placeholder="Search..">&nbsp;&nbsp;
+<button id="btn-search" type="Submit" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Search</button><br></br><br></br>
 </form>
+<form action="/logout" method="GET">
+<button id="btn-logout" type="Submit" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Logout</button>
+</form>
+<form action="/video" method="POST">
+<table cellspacing="5" cellpadding="10">
+    {% for i in v_data %}
+        <tr>
+		<td><input type="hidden" name="video_name" value="{{i.1}}"/>{{ i.1 }}</td>
+		<td>{{ i.2 }}</td>
+		<td><button id="btn-watch" type="Submit" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Watch</button></td>
+		</tr>
+    {% endfor %}
+</table>
+</center>
 </body>
-
-
 </html>

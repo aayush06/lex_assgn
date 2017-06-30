@@ -15,3 +15,8 @@
   color: #14396A !important;
   background: #4C00CF;
 }
+#btn-logout{
+   position:absolute;
+   top:0;
+   right:0;
+}

@@ -2,19 +2,14 @@
 <html>
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-		<!-- Latest compiled JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet"/>
-	<link href="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.css" rel="stylesheet"/>
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="../static/video.css"/>
-	<script src="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.js"></script>
+		<link href="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.css" rel="stylesheet"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="../static/video.css"/>
+		<script src="https://rawgit.com/wenzhixin/bootstrap-table/master/src/bootstrap-table.js"></script>
 	
 </head>
 <body>
@@ -24,19 +19,33 @@
   <source src="movie.ogg" type="video/ogg">
   Your browser does not support the video tag.
 </video>
+<form action="/logout" method="GET">
+<button id="btn-logout" type="Submit" class="btn btn-info"><i class="icon-hand-right"></i> &nbsp Logout</button>
+</form>
 <br></br>
 <form action="/like" method="POST">
-<button type="submit" name="Like" value="LIKE" id="btn">Like</button>{{data1}}
+<input type="hidden" name="video_name" value="{{data}}"/>
+<button type="submit" name="Like" value="LIKE" id="btn">Like</button>{{data_l}}
 </form>
 &nbsp;&nbsp;
 <form action="/dislike" method="POST">
-<button type="submit" name="dislike" value="DISLIKE" id="btn">Dislike</button>{{data2}}
+<input type="hidden" name="video_name" value="{{data}}"/>
+<button type="submit" name="dislike" value="DISLIKE" id="btn">Dislike</button>{{data_d}}
 </form>
 <br></br><br></br>
+<form action="/saveComment" method="POST">
 <h5>Comments:</h5>
-<textarea name="comment">Enter comment here...</textarea><br>
-</br>
+<input type="hidden" name="video_name" value="{{data}}"/>
+<textarea name="comment">Enter comment here...</textarea>&nbsp;&nbsp;
 <button="submit" value="Save Commment" name="save_comment" id="btn">Save Commment</button>
-
+<br></br>
+<table cellspacing="5" cellpadding="10">
+    {% for i in data_c %}
+        <tr>
+		<td>{{i}}</td>
+		</tr>
+    {% endfor %}
+</table>
+</form>
 </body>
 </html>
